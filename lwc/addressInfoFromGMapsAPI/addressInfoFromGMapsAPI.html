@@ -1,0 +1,148 @@
+<template>
+    <lightning-card class="slds-m-around_large">
+        
+        <lightning-layout>
+            <lightning-layout-item size="6" class="addressSearch" padding="around-small" flexibility="auto">
+                <lightning-card variant="Narrow" title="Origin Address" icon-name="standard:location">
+                
+
+                
+                <lightning-input variant="label-hidden" 
+                name="location" 
+                id="destination" 
+                data-id="location"                    
+                data-name="location" 
+                class="mailingAddressLocation" 
+                aura:id="locationSearch" 
+                value={location}
+                onchange={getSourceCities} 
+                type="search" 
+                placeholder="Please enter origin address"
+                aria-autocomplete="off" 
+                autocomplete="none">
+            </lightning-input>
+            
+            
+            <template if:true={showPred}>
+                <div>
+                    <ul class="city_predictions">
+                        <template for:each={predictions} for:item="pred">
+                            <li key={pred.place_id}>
+                                <a data-id={pred.place_id} onclick={CityDetails}>{pred.description}</a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+            
+            <template if:true={souceSelected}>
+                <lightning-card variant="Narrow" title="Selected Origin Address">
+                    <div class="slds-p-horizontal_small">
+                        <p>{selectedSourcedesc}</p>
+                        <!--<p>{slat}</p>-->
+                        <!--<p>{slng}</p>-->
+                        <lightning-output-field> {selectedSourcedesc} </lightning-output-field>
+                    </div>
+                </lightning-card>
+            </template>
+        </lightning-card>
+        </lightning-layout-item>
+        
+        <lightning-layout-item size="6" flexibility="auto" padding="around-small">
+            
+            <lightning-card variant="Narrow" title="Destination Address" icon-name="standard:location">
+        
+
+            <lightning-input variant="label-hidden"
+            name="location" 
+            id="source2" 
+            data-id="location2"
+            data-name="location2" 
+            class="mailingAddressLocation2" 
+            aura:id="locationSearch2"
+            value={targetlocation} 
+            onchange={gettargetCities} 
+            type="search"
+            placeholder="Please enter destination address" 
+            aria-autocomplete="off" 
+            autocomplete="none">
+        </lightning-input>
+        
+        <template if:true={showPredTarget}>
+            <div>
+                <ul class="city_predictions">
+                    <template for:each={targetpredictions} for:item="pred">
+                        <li key={pred.place_id}>
+                            <a data-id={pred.place_id} onclick={setTargetCityDetails}>{pred.description}</a>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+        
+        <template if:true={targetSelected}>
+            <lightning-card variant="Narrow" title="Selected Destination Address">
+                <div class="slds-p-horizontal_small">
+                    <p>{selectedTargetdesc}</p>
+                    <lightning-output-field> {selectedTargetdesc} </lightning-output-field>
+                </div>
+            </lightning-card>
+        </template>
+    </lightning-card>
+    </lightning-layout-item>
+    
+</lightning-layout>
+    <div>
+        <template if:true={isError}>
+            <div class ="slds-m-left_x-small slds-m-around_large" style="color:red;"> Please enter Origin Address and Destination Address</div>
+        </template>
+        
+            <lightning-button label="Get Directions" title="Non-primary action" onclick={getDistanceTimeCost}
+        class="slds-m-left_x-small slds-m-around_large">
+        </lightning-button>
+    </div>
+
+    <template if:true={response}>
+
+        <div class="slds-card_boundary slds-m-around_xx-large">
+        <lightning-card variant="Narrow" title="Result">            
+            <div class="slds-m-around_large slds-m-around_small">
+                <lightning-layout size="6" multiple-rows="true" horizontal-align="center">
+                    <lightning-layout-item size="4" padding="around-small" flexibility="auto">
+                        Distance between origin and destination
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" padding="around-small" flexibility="auto">: {distances}</lightning-layout-item> 
+
+                    <lightning-layout-item size="4" padding="around-small" flexibility="auto">
+                        Travel Time between origin and destination
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" padding="around-small" flexibility="auto">: {duration} by Drive</lightning-layout-item> 
+
+                    <lightning-layout-item size="4" padding="around-small" flexibility="auto">
+                        Driving Cost between origin and destination
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" padding="around-small" flexibility="auto">: $<lightning-formatted-number value={drivingCost}></lightning-formatted-number></lightning-layout-item> 
+                    
+                    <lightning-layout-item size="4" padding="around-small" flexibility="auto">
+                        Flying Cost between origin and destination
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" padding="around-small" flexibility="auto">: $<lightning-formatted-number value={flightCost}></lightning-formatted-number></lightning-layout-item> 
+                    
+                    <lightning-layout-item size="4" padding="around-small" flexibility="auto">
+                        Transit Cost between origin and destination
+                    </lightning-layout-item>
+                    <lightning-layout-item size="8" padding="around-small" flexibility="auto">: $<lightning-formatted-number value={transitCost}></lightning-formatted-number></lightning-layout-item>                                                                   
+
+             <!--   <p>Distance between origin and destination         : {distances}</p>
+                <p>Travel Time between origin and destination      : {duration} by Drive</p>
+                <p>Driving Cost between origin and destination     : $<lightning-formatted-number value={drivingCost}></lightning-formatted-number></p>
+                <p>Flying Cost between origin and destination      : $<lightning-formatted-number value={flightCost}></lightning-formatted-number></p>
+                <p>Transit Cost between origin and destination     : $<lightning-formatted-number value={transitCost}></lightning-formatted-number></p>-->
+                </lightning-layout>
+            </div>
+    </lightning-card>
+    </div>
+</template>
+
+</lightning-card>
+</template>
